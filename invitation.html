@@ -440,17 +440,26 @@
   sendBtn.addEventListener('click', (e) => {
     e.preventDefault();
     if (chosen) {
-      const phoneNumber = "3467727391";
-      const message = `It's Monday: ${chosen}`;
-      const smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
-      
-      // Try to open SMS
-      window.location.href = smsLink;
-      
-      // Fallback for desktop - show the message
-      setTimeout(() => {
-        alert(`Message to send:\n\n"${message}"\n\nTo: ${phoneNumber}`);
-      }, 500);
+      const telegramBotToken = '8686251126:AAEzWgaMmg-8Z9iZ08kfrzKHynD0x1kMdDQ';
+      const telegramChatId = '8125782044';
+      const message = `New invitation answer: ${chosen}`;
+      const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+
+      fetch(telegramUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: telegramChatId,
+          text: message
+        })
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error('Telegram failed');
+          alert('Thanks! Your answer was sent.');
+        })
+        .catch(() => {
+          alert('Something went wrong while sending your answer.');
+        });
     }
   });
 </script>
