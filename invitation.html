@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Parisienne&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FBF6EF;
+    --cream-deep: #F3EADC;
+    --burgundy: #6B1E2B;
+    --burgundy-deep: #4A1420;
+    --gold: #C9A24B;
+    --gold-soft: #E3CE9C;
+    --ink: #2B1418;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .stage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+
+  /* ---------- SEAL SCREEN ---------- */
+  #seal-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, var(--cream-deep), var(--cream) 70%);
+    z-index: 10;
+    transition: opacity 0.9s ease, visibility 0.9s ease;
+  }
+
+  #seal-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .seal-prompt {
+    text-align: center;
+  }
+
+  .seal-prompt p {
+    font-style: italic;
+    color: var(--burgundy);
+    letter-spacing: 0.08em;
+    margin-bottom: 22px;
+    font-size: 1.1rem;
+  }
+
+  .wax-seal {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #8A2A38, var(--burgundy) 55%, var(--burgundy-deep) 100%);
+    box-shadow: 0 8px 24px rgba(74, 20, 32, 0.35), inset 0 2px 6px rgba(255,255,255,0.15), inset 0 -6px 14px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.35s ease;
+    position: relative;
+  }
+
+  .wax-seal:hover { transform: scale(1.05); }
+  .wax-seal:active { transform: scale(0.96); }
+
+  .wax-seal svg { width: 54px; height: 54px; }
+
+  .wax-seal.cracking {
+    animation: crack 0.6s ease forwards;
+  }
+
+  @keyframes crack {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.08) rotate(-2deg); }
+    60% { transform: scale(0.9) rotate(2deg); }
+    100% { transform: scale(0); opacity: 0; }
+  }
+
+  /* ---------- INVITATION ---------- */
+  #invitation {
+    max-width: 560px;
+    width: 100%;
+    background: var(--cream);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 56px 44px 44px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+    box-shadow: 0 30px 60px rgba(74,20,32,0.12);
+  }
+
+  #invitation.reveal {
+    animation: unfold 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  @keyframes unfold {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .corner {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid var(--gold);
+  }
+  .corner.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .corner.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+  .corner.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+  .corner.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+  .eyebrow {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    font-size: 0.72rem;
+    color: var(--gold);
+    margin-bottom: 22px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+  }
+
+  .crying-meme {
+    display: block;
+    margin: 0 auto 26px;
+    border: none;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .photo-frame {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    margin: 0 auto 26px;
+    border: 3px solid var(--gold);
+    padding: 5px;
+    display: block;
+  }
+
+  .photo-frame-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--cream-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .photo-frame-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .photo-frame-inner svg {
+    width: 46px;
+    height: 46px;
+    opacity: 0.55;
+  }
+
+  h1 {
+    text-align: center;
+    font-weight: 500;
+    font-size: 2.15rem;
+    line-height: 1.25;
+    margin: 0 0 6px;
+    color: var(--burgundy-deep);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--burgundy);
+  }
+
+  .subline {
+    text-align: center;
+    font-size: 1.08rem;
+    font-style: italic;
+    color: #6b4a4f;
+    margin-bottom 30px;
+    margin: 0 0 34px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border: 1.5px solid var(--gold-soft);
+    border-radius: 3px;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Cormorant Garamond', serif;
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+  }
+
+  .option:hover {
+    border-color: var(--gold);
+    background: rgba(201, 162, 75, 0.06);
+  }
+
+  .option.selected {
+    border-color: var(--burgundy);
+    background: rgba(107, 30, 43, 0.06);
+    box-shadow: 0 4px 14px rgba(107,30,43,0.12);
+  }
+
+  .option-mark {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .option.selected .option-mark {
+    background: var(--burgundy);
+    border-color: var(--burgundy);
+  }
+
+  .option-mark svg {
+    width: 11px;
+    height: 11px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .option.selected .option-mark svg { opacity: 1; }
+
+  .option-text .option-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--ink);
+    display: block;
+  }
+
+  .option-text .option-desc {
+    font-size: 0.98rem;
+    font-style: italic;
+    color: #7a5c60;
+    display: block;
+  }
+
+  .confirm-area {
+    margin-top: 28px;
+    text-align: center;
+    min-height: 30px;
+  }
+
+  .response {
+    font-family: 'Parisienne', cursive;
+    font-size: 1.9rem;
+    color: var(--burgundy);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .response.show { opacity: 1; transform: translateY(0); }
+
+  .send-btn {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 11px 30px;
+    background: var(--burgundy);
+    color: var(--cream);
+    border: none;
+    border-radius: 2px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s, background 0.2s ease;
+  }
+
+  .send-btn.show { opacity: 1; transform: translateY(0); }
+  .send-btn:hover { background: var(--burgundy-deep); }
+
+  .signature {
+    text-align: center;
+    margin-top: 36px;
+    font-family: 'Parisienne', cursive;
+    font-size: 1.5rem;
+    color: var(--gold);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #invitation, .wax-seal, .response, .send-btn { transition: none !important; animation: none !important; }
+  }
+
+  @media (max-width: 480px) {
+    #invitation { padding: 44px 24px 34px; }
+    h1 { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="seal-screen">
+  <div class="seal-prompt">
+    <p>You should open this</p>
+    <button class="wax-seal" id="sealBtn" aria-label="Open the invitation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#E3CE9C" stroke-width="1.4">
+        <path d="M12 21s-7.5-4.9-10-9.4C.3 8.2 2 4.5 5.6 4c2-.3 3.8.7 4.9 2.3C11.6 4.7 13.4 3.7 15.4 4c3.6.5 5.3 4.2 3.6 7.6C16.5 16.1 12 21 12 21z" fill="#E3CE9C" stroke="none"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<div class="stage">
+  <div id="invitation">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+    <div class="eyebrow">PLEASE GO OUT WITH ME</div>
+    <img class="crying-meme" src="images (6).jpg" alt="Crying meme">
+
+    <!-- PHOTO: replace the SVG placeholder below with
+         <img src="her-photo.jpg" alt="Her name"> -->
+    <div class="photo-frame">
+      <div class="photo-frame-inner">
+        <img src="IMG_8696.jpeg" alt="Goofy picture" viewBox="0 0 24 24" fill="var(--gold)">
+          <path d="M12 21s-7.5-4.9-10-9.4C.3 8.2 2 4.5 5.6 4c2-.3 3.8.7 4.9 2.3C11.6 4.7 13.4 3.7 15.4 4c3.6.5 5.3 4.2 3.6 7.6C16.5 16.1 12 21 12 21z"/>
+        </img>
+      </div>
+    </div>
+
+    <h1>Will you spend <em>Monday evening</em><br>with me, My love?</h1>
+    <p class="subline">Choose however you'd like to spend it —</p>
+
+    <div class="options" id="options">
+      <button class="option" data-choice="Roller Skating">
+        <span class="option-mark"><svg viewBox="0 0 24 24" fill="none" stroke="var(--cream)" stroke-width="3"><polyline points="4 12 9 17 20 6"/></svg></span>
+        <span class="option-text">
+          <span class="option-title">Roller Skating</span>
+          <span class="option-desc">We'll rent skates and maybe fall (all you)</span>
+        </span>
+      </button>
+
+      <button class="option" data-choice="Museum">
+        <span class="option-mark"><svg viewBox="0 0 24 24" fill="none" stroke="var(--cream)" stroke-width="3"><polyline points="4 12 9 17 20 6"/></svg></span>
+        <span class="option-text">
+          <span class="option-title">We go to a museum</span>
+          <span class="option-desc"> Any musuem you like!</span>
+        </span>
+      </button>
+
+      <button class="option" data-choice="Goof off">
+        <span class="option-mark"><svg viewBox="0 0 24 24" fill="none" stroke="var(--cream)" stroke-width="3"><polyline points="4 12 9 17 20 6"/></svg></span>
+        <span class="option-text">
+          <span class="option-title">We just drive around and goof off</span>
+          <span class="option-desc">We can go to Walmart and Ross to check out clothes</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="confirm-area">
+      <div class="response" id="responseText"></div>
+      <br>
+      <button class="send-btn" id="sendBtn">Send my answer</button>
+    </div>
+
+    
+    <div class="signature">Sincerely the guy you like to call a bum</div>
+  </div>
+</div>
+
+<script>
+  const sealBtn = document.getElementById('sealBtn');
+  const sealScreen = document.getElementById('seal-screen');
+  const invitation = document.getElementById('invitation');
+  const options = document.querySelectorAll('.option');
+  const responseText = document.getElementById('responseText');
+  const sendBtn = document.getElementById('sendBtn');
+
+  sealBtn.addEventListener('click', () => {
+    sealBtn.classList.add('cracking');
+    setTimeout(() => {
+      sealScreen.classList.add('hidden');
+      invitation.classList.add('reveal');
+    }, 350);
+  });
+
+  let chosen = null;
+
+  options.forEach(opt => {
+    opt.addEventListener('click', () => {
+      options.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      chosen = opt.dataset.choice;
+
+      responseText.textContent = "wonderful — Monday it is";
+      responseText.classList.add('show');
+      sendBtn.classList.add('show');
+    });
+  });
+
+  sendBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (chosen) {
+      const phoneNumber = "3467727391";
+      const message = `It's Monday: ${chosen}`;
+      const smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
+      
+      // Try to open SMS
+      window.location.href = smsLink;
+      
+      // Fallback for desktop - show the message
+      setTimeout(() => {
+        alert(`Message to send:\n\n"${message}"\n\nTo: ${phoneNumber}`);
+      }, 500);
+    }
+  });
+</script>
+
+</body>
+</html>
