@@ -440,8 +440,19 @@
   sendBtn.addEventListener('click', (e) => {
     e.preventDefault();
     if (chosen) {
-      const message = `New answer: ${chosen}`;
-      alert(message);
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwJNY24WBDYZgWVVU9K2e3QgGujU5oouOXS99SE7Lb68aR4UWmpoNvQueL1SLlB48g/exec';
+
+      fetch(scriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `choice=${encodeURIComponent(chosen)}`
+      })
+        .then(() => {
+          alert('Thanks! Your answer was sent.');
+        })
+        .catch(() => {
+          alert('Something went wrong while sending your answer.');
+        });
     }
   });
 </script>
